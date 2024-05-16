@@ -6,10 +6,20 @@ on:
       - main
 
 jobs:
-  build:
+  build-win:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Building ⚙
+      - name: Build for windows ⚙
         run: |
-          dotnet publish -o dist dotnet/demo1.csproj
+          dotnet publish -r win-x64 dotnet/demo1.csproj
+          dotnet publish -r win-arm64 dotnet/demo1.csproj
+  
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build for linux ⚙
+        run: |
+          dotnet publish -r linux-x64 dotnet/demo1.csproj
+          dotnet publish -r linux-arm64 dotnet/demo1.csproj
