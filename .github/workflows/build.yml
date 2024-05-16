@@ -14,10 +14,10 @@ jobs:
             rid: linux-x64
             artifact_name: demo1
             asset_name: demo1-linux-amd64
-          - os: windows-latest
-            rid: win-x64
-            artifact_name: demo1.exe
-            asset_name: demo1-windows-amd64
+          # - os: windows-latest
+          #   rid: win-x64
+          #   artifact_name: demo1.exe
+          #   asset_name: demo1-windows-amd64
     name: Publish for ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
