@@ -33,4 +33,9 @@ jobs:
           sudo apt install -y clang llvm binutils-aarch64-linux-gnu gcc-aarch64-linux-gnu zlib1g-dev:arm64
       - name: Build for linux arm64 ⚙
         run: |
-          dotnet publish -r linux-arm64 dotnet/demo1.csproj
+          dotnet publish -r linux-arm64 dotnet/demo1.csproj -o dist
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo1
+          path: dist/demo1
