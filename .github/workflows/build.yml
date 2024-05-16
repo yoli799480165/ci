@@ -19,6 +19,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Build for linux ⚙
+      - name: Install cross build tool
         run: |
-          dotnet publish dotnet/demo1.csproj -a arm64 -p:SysRoot=/crossrootfs/arm64 -p:LinkerFlavor=lld
+          sudo dpkg --add-architecture arm64
+          sudo bash -c 'cat > /etc/apt/sources.list.d/arm64.list <<EOF
+          deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ jammy main restricted
+          deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ jammy-updates main restricted
+          deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ jammy-backports main restricted universe multiverse
+          EOF'
+          sudo sed -i -e 's/deb http/deb [arch=amd64] http/g' /etc/apt/sources.list
+          sudo sed -i -e 's/deb mirror/deb [arch=amd64] mirror/g' /etc/apt/sources.list
+          sudo apt update
+          sudo apt install -y clang llvm binutils-aarch64-linux-gnu gcc-aarch64-linux-gnu zlib1g-dev:arm64
+      - name: Build for linux arm64 ⚙
+        run: |
+          dotnet publish -r linux-arm64 dotnet/demo1.csproj
