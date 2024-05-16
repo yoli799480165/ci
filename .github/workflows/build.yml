@@ -19,7 +19,7 @@ jobs:
             artifact_name: demo1.exe
             asset_name: demo1-windows-amd64
     name: Publish for ${{ matrix.os }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - name: dotnet publish ⚙
