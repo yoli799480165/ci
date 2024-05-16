@@ -1,0 +1,15 @@
+﻿name: Build Testing
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Building ⚙
+        run: |
+          dotnet publish -o dist dotnet/demo1.csproj
