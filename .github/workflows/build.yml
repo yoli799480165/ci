@@ -14,18 +14,35 @@ jobs:
             rid: linux-x64
             artifact_name: demo1
             asset_name: demo1-linux-x64
+          - os: ubuntu-latest
+            rid: linux-arm64
+            artifact_name: demo1
+            asset_name: demo1-linux-arm64
           - os: windows-latest
             rid: win-x64
             artifact_name: demo1.exe
-            asset_name: demo1-win-x64
+            asset_name: demo1-win-x64.exe
           - os: windows-latest
             rid: win-arm64
             artifact_name: demo1.exe
-            asset_name: demo1-win-arm64
+            asset_name: demo1-win-arm64.exe
     name: Publish for ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
+      - name: Install Build Tool
+        if: ${{ matrix.rid }} == 'linux-arm64'
+        run: |
+          sudo dpkg --add-architecture arm64
+          sudo bash -c 'cat > /etc/apt/sources.list.d/arm64.list <<EOF
+          deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ jammy main restricted
+          deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ jammy-updates main restricted
+          deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ jammy-backports main restricted universe multiverse
+          EOF'
+          sudo sed -i -e 's/deb http/deb [arch=amd64] http/g' /etc/apt/sources.list
+          sudo sed -i -e 's/deb mirror/deb [arch=amd64] mirror/g' /etc/apt/sources.list
+          sudo apt update
+          sudo apt install -y clang llvm binutils-aarch64-linux-gnu gcc-aarch64-linux-gnu zlib1g-dev:arm64
       - name: dotnet publish ⚙
         run: |
           dotnet publish -r ${{ matrix.rid }} dotnet/demo1.csproj -o dist
