@@ -14,18 +14,18 @@ jobs:
             rid: linux-x64
             artifact_name: demo1
             asset_name: demo1-linux-x64
-          - os: ubuntu-latest
-            rid: linux-arm64
-            artifact_name: demo1
-            asset_name: demo1-linux-arm64
+          # - os: ubuntu-latest
+          #   rid: linux-arm64
+          #   artifact_name: demo1
+          #   asset_name: demo1-linux-arm64
           - os: windows-latest
             rid: win-x64
             artifact_name: demo1.exe
             asset_name: demo1-win-x64.exe
-          - os: windows-latest
-            rid: win-arm64
-            artifact_name: demo1.exe
-            asset_name: demo1-win-arm64.exe
+          # - os: windows-latest
+          #   rid: win-arm64
+          #   artifact_name: demo1.exe
+          #   asset_name: demo1-win-arm64.exe
     name: Publish for ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
@@ -43,9 +43,14 @@ jobs:
           sudo sed -i -e 's/deb mirror/deb [arch=amd64] mirror/g' /etc/apt/sources.list
           sudo apt update
           sudo apt install -y clang llvm binutils-aarch64-linux-gnu gcc-aarch64-linux-gnu zlib1g-dev:arm64
+      - name: Get Version
+        id: get_version
+        uses: jannemattila/get-version-from-tag@v3
       - name: dotnet publish ⚙
         run: |
-          dotnet publish -r ${{ matrix.rid }} dotnet/demo1.csproj -o dist
+          VERSION=${{ steps.get_version.outputs.version }}
+          echo ${VERSION}
+          dotnet publish -r ${{ matrix.rid }} dotnet/demo1.csproj -o dist -p:PublishAot=true -p:AssemblyVersion=${VERSION} -p:Version=${VERSION}
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
@@ -53,3 +58,7 @@ jobs:
           file: dist/${{ matrix.artifact_name }}
           asset_name: ${{ matrix.asset_name }}
           tag: ${{ github.ref }}
+      - name: Upload
+        run: |
+          VERSION=${{ steps.get_version.outputs.version }}
+          echo ${VERSION}
