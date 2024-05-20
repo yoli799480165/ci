@@ -44,11 +44,13 @@ jobs:
           sudo apt update
           sudo apt install -y clang llvm binutils-aarch64-linux-gnu gcc-aarch64-linux-gnu zlib1g-dev:arm64
       - name: Get Version
-        id: get_version
-        uses: jannemattila/get-version-from-tag@v3
+        id: get_tag
+        uses: dawidd6/action-get-tag@v1
+        with:
+          strip_v: true
       - name: dotnet publish ⚙
         run: |
-          VERSION=${{ steps.get_version.outputs.version }}
+          VERSION=${{ steps.get_tag.outputs.tag }}
           echo ${VERSION}
           dotnet publish -r ${{ matrix.rid }} dotnet/demo1.csproj -o dist -p:PublishAot=true -p:AssemblyVersion=${VERSION} -p:Version=${VERSION}
       - name: Upload binaries to release
@@ -60,5 +62,5 @@ jobs:
           tag: ${{ github.ref }}
       - name: Upload
         run: |
-          VERSION=${{ steps.get_version.outputs.version }}
+          VERSION=${{ steps.get_tag.outputs.tag }}
           echo ${VERSION}
