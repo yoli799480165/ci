@@ -50,9 +50,8 @@ jobs:
           strip_v: true
       - name: dotnet publish ⚙
         run: |
-          VERSION=${{ steps.get_tag.outputs.tag }}
-          echo ${VERSION}
-          dotnet publish -r ${{ matrix.rid }} dotnet/demo1.csproj -o dist -p:PublishAot=true -p:AssemblyVersion=${VERSION} -p:Version=${VERSION}
+          echo ${{ steps.get_tag.outputs.tag }}
+          dotnet publish -r ${{ matrix.rid }} dotnet/demo1.csproj -o dist -p:PublishAot=true -p:AssemblyVersion=${{ steps.get_tag.outputs.tag }} -p:Version=${{ steps.get_tag.outputs.tag }}
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
@@ -62,5 +61,4 @@ jobs:
           tag: ${{ github.ref }}
       - name: Upload
         run: |
-          VERSION=${{ steps.get_tag.outputs.tag }}
-          echo ${VERSION}
+          echo ${{ steps.get_tag.outputs.tag }}
