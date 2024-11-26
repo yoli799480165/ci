@@ -21,6 +21,6 @@ jobs:
         run: |
           echo "TAG_VERSION=${VERSION}" > .env
           cat .env
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{secrets.DOCKER_USERNAME}} --password-stdin ${{secrets.DOCKER_REPOSITORY}}
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{secrets.DOCKER_USERNAME}} --password-stdin
           echo "${{ secrets.DOCKER_ALIYUN_PASSWORD }}" | docker login -u ${{secrets.DOCKER_ALIYUN_USERNAME}} --password-stdin ${{secrets.DOCKER_ALIYUN_REPOSITORY}}
           docker compose build --push
