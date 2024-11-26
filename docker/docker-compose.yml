@@ -13,4 +13,7 @@ services:
     restart: always
     build:
       dockerfile: ./docker/Dockerfile
+      tags:
+        - chaldea/ci-demo:latest
+        - chaldea/ci-demo:${TAG_VERSION}
       <<: *ci-build
