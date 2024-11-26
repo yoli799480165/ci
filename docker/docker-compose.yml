@@ -15,7 +15,7 @@ services:
       dockerfile: ./docker/Dockerfile
       tags:
         - chaldea/ci-demo:latest
-        - chaldea/ci-demo:${DOCKER_TAG}
+        - chaldea/ci-demo:${TAG_VERSION}
         - registry.cn-shanghai.aliyuncs.com/chaldea/ci-demo:latest
-        - registry.cn-shanghai.aliyuncs.com/chaldea/ci-demo:${DOCKER_TAG}
+        - registry.cn-shanghai.aliyuncs.com/chaldea/ci-demo:${TAG_VERSION}
       <<: *ci-build
